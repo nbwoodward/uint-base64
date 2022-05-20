@@ -1,4 +1,4 @@
-package main
+package base64
 
 import (
 	"math"
@@ -116,5 +116,19 @@ func TestStringToInt(t *testing.T) {
 	_, err := StringToInt("a:")
 	if err == nil {
 		t.Errorf("Expected error for illegal character")
+	}
+}
+
+func BenchmarkIntToString(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		IntToString(i)
+	}
+}
+
+func BenchmarkStringToInt(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		start := i % 50
+		length := i % 10
+		StringToInt(chars[start : start+length])
 	}
 }
