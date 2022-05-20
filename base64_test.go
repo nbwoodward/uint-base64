@@ -93,19 +93,28 @@ var tests = []struct {
 
 func TestIntToString(t *testing.T) {
 	for _, tt := range tests {
-		result := IntToString(tt.intr)
+		result, _ := IntToString(tt.intr)
 		if result != tt.str {
 			t.Errorf("Got %v, wanted %v", result, tt.str)
 		}
+	}
+
+	_, err := IntToString(-1)
+	if err == nil {
+		t.Errorf("Expected error for negative number")
 	}
 }
 
 func TestStringToInt(t *testing.T) {
 	for _, tt := range tests {
-		result := StringToInt(tt.str)
+		result, _ := StringToInt(tt.str)
 		if result != tt.intr {
 			t.Errorf("Got %v, wanted %v", result, tt.intr)
 		}
 	}
 
+	_, err := StringToInt("a:")
+	if err == nil {
+		t.Errorf("Expected error for illegal character")
+	}
 }

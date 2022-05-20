@@ -1,8 +1,8 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	"math"
 )
 
 var chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_"
@@ -13,13 +13,11 @@ func init() {
 	setupMaps()
 }
 
-func main() {
-	fmt.Println(math.MaxInt64)
-	fmt.Println(IntToString(math.MaxInt64))
-	fmt.Println(IntToString(math.MinInt64))
-}
+func IntToString(src int) (hash string, err error) {
+	if src < 0 {
+		return "", errors.New("Integer must be >= 0")
+	}
 
-func IntToString(src int) (hash string) {
 	for {
 		key := src & 63
 		hash = string(charMap[key]) + hash
@@ -31,10 +29,10 @@ func IntToString(src int) (hash string) {
 
 	}
 
-	return hash
+	return
 }
 
-func StringToInt(str string) (res int) {
+func StringToInt(str string) (res int, err error) {
 	for {
 		if len(str) == 0 {
 			break
@@ -42,11 +40,14 @@ func StringToInt(str string) (res int) {
 
 		char := str[0:1]
 		str = str[1:]
-		num := intMap[char]
+		num, exists := intMap[char]
+		if !exists {
+			return 0, errors.New(fmt.Sprintf("Illegal character in string: %v", char))
+		}
 		res = res<<6 | num
 	}
 
-	return res
+	return
 }
 
 func setupMaps() {
