@@ -1,6 +1,6 @@
-# URL Friendly Base64 Hashing
+# URL Friendly Uint-to-Base64 Hashing
 
-A simple and fast Go module to hash integers to URL friendly base64 encodings.
+A simple and fast Go module to hash unsigned integers to URL friendly base64 encodings.
 This algorithm converts each 6 bits of a number to one character meaning
 it should create the miniumum possible base64 string length and is easily reproducable
 in any programming language.
@@ -24,10 +24,6 @@ func main() {
   // Prints: "314159 -> 1cIL -> 314159"
 }
 ```
-
-### Limitations
- - Does not hash negative numbers
- - Cannot hash a number greater than the max 64 bit integer (9223372036854775807)
 
 ### The Algorithm
 This algorithm takes each 6 bits of a number (which yields a number between
