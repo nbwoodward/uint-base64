@@ -6,21 +6,17 @@ import (
 )
 
 var chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_"
-var intMap = make(map[string]int)
-var charMap = make(map[int]string)
+var intMap = make(map[string]uint)
+var charMap = make(map[uint]string)
 
 func init() {
 	setupMaps()
 }
 
-func IntToString(src int) (hash string, err error) {
-	if src < 0 {
-		return "", errors.New("Integer must be >= 0")
-	}
-
+func IntToString(src uint) (hash string, err error) {
 	for {
 		key := src & 63
-		hash = string(charMap[key]) + hash
+		hash = charMap[key] + hash
 
 		src = src >> 6
 		if src == 0 {
@@ -32,7 +28,11 @@ func IntToString(src int) (hash string, err error) {
 	return
 }
 
-func StringToInt(str string) (res int, err error) {
+func StringToInt(str string) (res uint, err error) {
+	if str == "" {
+		return 0, errors.New("Cannot convert empty string")
+	}
+
 	for {
 		if len(str) == 0 {
 			break
@@ -53,7 +53,7 @@ func StringToInt(str string) (res int, err error) {
 func setupMaps() {
 	for i := 0; i < len(chars); i++ {
 		char := chars[i : i+1]
-		intMap[char] = i
-		charMap[i] = char
+		intMap[char] = uint(i)
+		charMap[uint(i)] = char
 	}
 }

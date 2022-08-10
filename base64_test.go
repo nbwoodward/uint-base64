@@ -3,10 +3,12 @@ package base64
 import (
 	"math"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var tests = []struct {
-	intr int
+	intr uint
 	str  string
 }{
 	{0, "0"},
@@ -88,40 +90,32 @@ var tests = []struct {
 	{3141592653, "2Xgepd"},
 	{31415926535, "tgyfY7"},
 	{314159265359, "4ABmvpf"},
-	{int(math.MaxInt64), "7__________"},
+	{math.MaxUint64, "f__________"},
 }
 
 func TestIntToString(t *testing.T) {
-	for _, tt := range tests {
-		result, _ := IntToString(tt.intr)
-		if result != tt.str {
-			t.Errorf("Got %v, wanted %v", result, tt.str)
-		}
-	}
-
-	_, err := IntToString(-1)
-	if err == nil {
-		t.Errorf("Expected error for negative number")
+	for _, test := range tests {
+		result, _ := IntToString(test.intr)
+		assert.Equal(t, test.str, result)
 	}
 }
 
 func TestStringToInt(t *testing.T) {
-	for _, tt := range tests {
-		result, _ := StringToInt(tt.str)
-		if result != tt.intr {
-			t.Errorf("Got %v, wanted %v", result, tt.intr)
-		}
+	for _, test := range tests {
+		result, _ := StringToInt(test.str)
+		assert.Equal(t, test.intr, result)
 	}
 
 	_, err := StringToInt("a:")
-	if err == nil {
-		t.Errorf("Expected error for illegal character")
-	}
+	assert.NotNil(t, err)
+
+	_, err = StringToInt("")
+	assert.NotNil(t, err)
 }
 
 func BenchmarkIntToString(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		IntToString(i)
+		IntToString(uint(i))
 	}
 }
 
